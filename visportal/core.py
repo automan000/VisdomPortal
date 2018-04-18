@@ -12,6 +12,13 @@ class VisdomPortal():
         self.image_std = image_norm[1]
 
     def draw_curve(self, value, step, title):
+        '''
+
+        :param value: list of variable, torch.tensor, numpy, int or float.
+        :param step: int, float
+        :param title: string
+        :return:
+        '''
         assert isinstance(value, (torch.autograd.variable.Variable, int, float,
                                   np.ndarray)), 'Value type should be torch variable, int, float or numpy.ndarray.'
         assert isinstance(step, (int, float, np.ndarray)), 'Step type should be int, float or numpy.ndarray.'
@@ -34,6 +41,37 @@ class VisdomPortal():
         else:
             self.win_handles[title] = self.vis.line(value, step, opts={'title': title})
 
+    def draw_curves(self, values, names=None, step=None, title=None):
+        '''
+        :param values: list of variable, torch.tensor, numpy, int or float.
+        :param names: list of string
+        :param step: int, float
+        :param title: string
+        :return: None
+        '''
+        assert isinstance(values, list) and isinstance(names, list)
+        assert not isinstance(names, type(None)) and len(names) == len(values)
+
+        for i, value in enumerate(values):
+            if isinstance(value, torch.autograd.variable.Variable):
+                value = value.data
+            if isinstance(value, torch._TensorBase):
+                if value.is_cuda:
+                    value = value.cpu()
+                value = value.numpy()
+            if isinstance(value, np.ndarray):
+                value = value[0]
+            values[i] = value
+
+        if title in self.win_handles:
+            win_name = self.win_handles[title]
+            self.vis.line(np.expand_dims(np.array(values), 0), np.expand_dims(np.repeat(step, len(values)), 0),
+                          win=win_name, update='append', opts={'title': title, 'legend': names})
+        else:
+            self.win_handles[title] = self.vis.line(np.expand_dims(np.array(values), 0),
+                                                    np.expand_dims(np.repeat(step, len(values)), 0),
+                                                    opts={'title': title, 'legend': names})
+
     def draw_bars(self, value, title, legends=[]):
         if isinstance(value, dict):
             keys = []
@@ -51,8 +89,6 @@ class VisdomPortal():
             self.vis.bar(value, win=win_name, opts={'legend': legends, 'title': title})
         else:
             self.win_handles[title] = self.vis.bar(value, opts={'legend': legends, 'title': title})
-
-
 
     def draw_images(self, value, title, unnormalize=True):
         assert isinstance(value, (torch.autograd.variable.Variable, torch._TensorBase,
