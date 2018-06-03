@@ -10,7 +10,7 @@ def read(file_name):
 
 setup(
     name='visportal',
-    version='0.1.0',
+    version='0.1.1',
     description='A simple tool for using PyTorch and Visdom.',
     # long_description=read('README.md'),
     url='https://github.com/automan000/VisdomPortal',
