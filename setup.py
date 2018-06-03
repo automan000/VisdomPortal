@@ -9,7 +9,7 @@ def read(file_name):
         return f.readlines()
 
 setup(
-    name='visdom-portal',
+    name='visportal',
     version='0.1.0',
     description='A simple tool for using PyTorch and Visdom.',
     # long_description=read('README.md'),
