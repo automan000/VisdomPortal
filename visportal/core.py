@@ -1,7 +1,7 @@
 import visdom
 import numpy as np
 import torch
-
+# from torch.autograd import Variable
 
 class VisdomPortal():
     def __init__(self, env_name='Portal_Default', image_norm=[(0.5, 0.5, 0.5), (0.5, 0.5, 0.5)]):
@@ -14,20 +14,16 @@ class VisdomPortal():
     def draw_curve(self, value, step, title):
         '''
 
-        :param value: list of variable, torch.tensor, numpy, int or float.
+        :param value: list of torch.tensor, numpy, int or float.
         :param step: int, float
         :param title: string
         :return:
         '''
-        assert isinstance(value, (torch.autograd.variable.Variable, int, float,
-                                  np.ndarray)), 'Value type should be torch variable, int, float or numpy.ndarray.'
+        assert isinstance(value, (int, float,
+                                  np.ndarray)), 'Value type should be int, float or numpy.ndarray.'
         assert isinstance(step, (int, float, np.ndarray)), 'Step type should be int, float or numpy.ndarray.'
 
-        if isinstance(value, torch.autograd.variable.Variable):
-            if value.is_cuda:
-                value = value.cpu()
-            value = value.data.numpy().astype(np.float)
-        elif isinstance(value, (int, float)):
+        if isinstance(value, (int, float)):
             value = np.array([value], dtype=np.float)
 
         if isinstance(step, np.ndarray):
@@ -43,7 +39,7 @@ class VisdomPortal():
 
     def draw_curves(self, values, names=None, step=None, title=None):
         '''
-        :param values: list of variable, torch.tensor, numpy, int or float.
+        :param values: list of torch.tensor, numpy, int or float.
         :param names: list of string
         :param step: int, float
         :param title: string
@@ -53,8 +49,7 @@ class VisdomPortal():
         assert not isinstance(names, type(None)) and len(names) == len(values)
 
         for i, value in enumerate(values):
-            if isinstance(value, torch.autograd.variable.Variable):
-                value = value.data
+
             if isinstance(value, torch._TensorBase):
                 if value.is_cuda:
                     value = value.cpu()
@@ -91,15 +86,14 @@ class VisdomPortal():
             self.win_handles[title] = self.vis.bar(value, opts={'legend': legends, 'title': title})
 
     def draw_images(self, value, title, unnormalize=True):
-        assert isinstance(value, (torch.autograd.variable.Variable, torch._TensorBase,
-                                  np.ndarray)), 'Value type should be torch variable, torch tensor or numpy.ndarray.'
+        assert isinstance(value, (torch._TensorBase, np.ndarray)), 'Value type should be torch tensor or numpy.ndarray.'
         # variable
-        if isinstance(value, torch.autograd.variable.Variable):
-            if value.is_cuda:
-                value = value.cpu()
-            value = value.data.numpy()
+        # if isinstance(value, torch.autograd.variable.Variable):
+        #     if value.is_cuda:
+        #         value = value.cpu()
+        #     value = value.data.numpy()
         # tensor
-        elif isinstance(value, torch._TensorBase):
+        if isinstance(value, torch._TensorBase):
             if value.is_cuda:
                 value = value.cpu()
             value = value.numpy()

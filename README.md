@@ -2,7 +2,7 @@
 Portal for Visdom and PyTorch
 
 # Requirements
-+ PyTorch
++ PyTorch-0.4.0
 + Visdom
 + Numpy
 
