@@ -50,7 +50,7 @@ class VisdomPortal():
 
         for i, value in enumerate(values):
 
-            if isinstance(value, torch._TensorBase):
+            if isinstance(value, torch.Tensor):
                 if value.is_cuda:
                     value = value.cpu()
                 value = value.numpy()
@@ -86,14 +86,14 @@ class VisdomPortal():
             self.win_handles[title] = self.vis.bar(value, opts={'legend': legends, 'title': title})
 
     def draw_images(self, value, title, unnormalize=True):
-        assert isinstance(value, (torch._TensorBase, np.ndarray)), 'Value type should be torch tensor or numpy.ndarray.'
+        assert isinstance(value, (torch.Tensor, np.ndarray)), 'Value type should be torch tensor or numpy.ndarray.'
         # variable
         # if isinstance(value, torch.autograd.variable.Variable):
         #     if value.is_cuda:
         #         value = value.cpu()
         #     value = value.data.numpy()
         # tensor
-        if isinstance(value, torch._TensorBase):
+        if isinstance(value, torch.Tensor):
             if value.is_cuda:
                 value = value.cpu()
             value = value.numpy()
