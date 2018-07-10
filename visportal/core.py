@@ -103,7 +103,7 @@ class VisdomPortal():
         if unnormalize:
             norm = np.array(self.image_norm[:value.shape[1]]).reshape((1, -1, 1, 1))
             std = np.array(self.image_std[:value.shape[1]]).reshape((1, -1, 1, 1))
-            value = (value * std + norm) * 256
+            value = (value * std + norm) * 255
 
         if title in self.win_handles:
             win_name = self.win_handles[title]
