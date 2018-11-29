@@ -1,1 +1,1 @@
-from visportal.core import VisdomPortal
+from .core import VisdomPortal
