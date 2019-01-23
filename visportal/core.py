@@ -4,9 +4,9 @@ import torch
 # from torch.autograd import Variable
 
 class VisdomPortal():
-    def __init__(self, env_name='Portal_Default', image_norm=[(0.5, 0.5, 0.5), (0.5, 0.5, 0.5)]):
+    def __init__(self, env_name='Portal_Default', image_norm=[(0.5, 0.5, 0.5), (0.5, 0.5, 0.5)],server="http://localhost"):
         # prepare visdom
-        self.vis = visdom.Visdom(env=env_name)
+        self.vis = visdom.Visdom(env=env_name,server=server)
         self.win_handles = {}
         self.image_norm = image_norm[0]
         self.image_std = image_norm[1]
