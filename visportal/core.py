@@ -112,3 +112,11 @@ class VisdomPortal():
         else:
             self.win_handles[title] = self.vis.images(value.astype(np.uint8),
                                                       opts={'caption': title})
+
+    def show_text(self,text,title):
+        assert type(text)==str
+        t=""
+        if title is not None:
+            t="<p><b>"+title+"</b></p>"
+        t+=text
+        self.vis.text(t)
