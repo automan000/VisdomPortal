@@ -1,6 +1,9 @@
 # VisdomPortal
 Portal for Visdom and PyTorch
 
+# Install
+pip install git+https://github.com/automan000/VisdomPortal
+
 # Requirements
 + PyTorch-0.4.0
 + Visdom
